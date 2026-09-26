@@ -1,26 +1,190 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-enhanced: var(--enhanced);
+  --color-enhanced-soft: var(--enhanced-soft);
+  --color-lake: var(--lake);
+  --color-lake-soft: var(--lake-soft);
+  --color-pine: var(--pine);
+  --color-sand: var(--sand);
+  --color-focus: var(--focus);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+ * MittenLink palette — Great Lakes blue, northern pine green, warm dune sand.
+ * All text/background pairs meet WCAG 2.2 AA (4.5:1 for body text); muted
+ * text is kept at ≥ 7:1 on white to avoid low-contrast grey.
+ */
+:root {
+  --background: #fbfaf6;
+  --foreground: #1b2430;
+  --card: #ffffff;
+  --card-foreground: #1b2430;
+  --popover: #ffffff;
+  --popover-foreground: #1b2430;
+  --primary: #0b5780;          /* lake blue — 7.6:1 on white */
+  --primary-foreground: #ffffff;
+  --secondary: #e8f1f6;
+  --secondary-foreground: #0b3f5c;
+  --muted: #f1efe9;
+  --muted-foreground: #46505c; /* 8.2:1 on white */
+  --accent: #e8f1f6;
+  --accent-foreground: #0b3f5c;
+  --destructive: #b42318;
+  --border: #cfd4d9;
+  --input: #8a939d;            /* 3:1 non-text contrast for form controls */
+  --ring: #0b5780;
+  --focus: #b45309;            /* high-visibility focus outline (amber) */
+  --success: #17603b;
+  --success-soft: #e3f3ea;
+  --warning: #7a4a00;
+  --warning-soft: #fff1d6;
+  --danger: #a1231a;
+  --danger-soft: #fde8e6;
+  --info: #0b5780;
+  --info-soft: #e5f0f7;
+  --enhanced: #5b3a8c;
+  --enhanced-soft: #efe8f8;
+  --lake: #0b5780;
+  --lake-soft: #dcebf3;
+  --pine: #1f5f4a;
+  --sand: #f3ead7;
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4 {
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  a {
+    text-underline-offset: 0.18em;
+  }
+  /* Visible, high-contrast keyboard focus everywhere. */
+  :focus-visible {
+    outline: 3px solid var(--focus) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 5px #fff;
+  }
+  ::selection {
+    background: #cfe4f1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Stronger borders when the user asks for more contrast. */
+@media (prefers-contrast: more) {
+  :root {
+    --border: #6b7380;
+    --muted-foreground: #2b333d;
+  }
+}
+
+/* Windows High Contrast / forced colors: keep badges and focus visible. */
+@media (forced-colors: active) {
+  .ml-badge { border: 1px solid CanvasText; }
+  :focus-visible { outline: 3px solid Highlight !important; }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 640px) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 1024px) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Long-form plain-language guide content. */
+.prose-guide p {
+  margin-block: 0 1rem;
+  max-width: 68ch;
+}
+
+/* Leaflet map container sizing and focus visibility. */
+.leaflet-container {
+  font: inherit;
+  border-radius: var(--radius);
+}
+.leaflet-container:focus-visible {
+  outline: 3px solid var(--focus) !important;
+}
+.ml-marker {
+  background: var(--primary);
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+}
+.ml-marker.is-active {
+  background: var(--focus);
+  transform: scale(1.2);
 }
