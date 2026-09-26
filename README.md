@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MittenLink — Michigan Disability Resource Network (Phase I demo)
 
-## Getting Started
+A database-driven statewide disability resource platform. It covers:
 
-First, run the development server:
+- unified search with geographic and typo-tolerant matching
+- provider profiles with multiple locations and services
+- provider claiming and moderated provider edits
+- a Resource Verifier workspace and admin review queues
+- Source Watch with AI-assisted discovery, deduplication, and outreach/CRM
+- family experience reports and failed-search / resource-gap analytics
+- Enhanced listings (test-mode billing), audit history, and accessibility built in
+
+> All organizations, people, and contact details are **fictional demonstration data** placed in real Michigan geography.
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000 — database creates and seeds itself on first request
 ```
+No accounts or API keys are needed. Copy `.env.example` to `.env.local` to configure integrations.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Deploying to Vercel:** import the repository and deploy with no settings needed. The build creates a pre-seeded database snapshot that each server instance loads into memory. Demo changes are temporary and reset on redeploy. For persistent data, connect Supabase (see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+On **Sign In**, use the one-click demo buttons:
 
-## Learn More
+| Person | Role |
+|---|---|
+| Sarah Mitchell (admin@mittenlink.demo) | Super Administrator |
+| Jordan Lee (verifier@mittenlink.demo) | Resource Verifier |
+| Emily Carter (provider@mittenlink.demo) | Provider — Great Lakes Independent Living Network (Enhanced) |
+| Alex Morgan (community@mittenlink.demo) | Community Member |
 
-To learn more about Next.js, take a look at the following resources:
+Password sign-in uses `DEMO_ACCOUNT_PASSWORD` (default for demo builds: `MittenLink-Demo-2026!`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Client walkthrough (about 15 minutes)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Home.** Search "Autism services" with location "Ann Arbor, MI", then pick the 25-mile radius and the **Children** filter.
+2. **Results.** Point out distance, verification status, "Last reviewed", and the Enhanced label (which never boosts ranking). Switch **List / Map**.
+3. **Provider profile.** Open *Great Lakes Autism & Family Center*. Show services, locations, accessibility details, Verification Information, and the **Claim This Provider** and **Report outdated information** links.
+4. **Typo tolerance.** Search "ocupational therapy".
+5. **Zero results.** Search "Respite care" near "Alpena". The page says there's no exact match in the area, offers statewide options, and logs the search as a gap.
+6. **Claim a provider.** Sign in as **Alex**, go to **Claim a Provider**, choose an organization, and submit. The claim shows under *My claims*.
+7. **Approve the claim.** Sign in as **Sarah** and open **Admin → Claims**. Approve David Reynolds' claim, or the one Alex just made. Approval grants management access.
+8. **Edit as a provider.** Sign in as **Emily**, go to **Provider Dashboard → Services**, edit a service, and submit it for review.
+9. **Verify the change.** Sign in as **Jordan** and open **Verification Queue**. The task shows a field-by-field diff and contact provenance. Choose **Approve & Publish**, then reload the public page to see the change.
+10. **Admin tools.** As **Sarah**, show **Source Watch** (candidates labeled as suggestions that require human review, duplicate confidence, import) and **Potential Duplicates** ("Michigan Ability Center" vs "Michigan Ability Ctr." at 91%). Then show **Search Analytics** (search gaps and resource-gap indicators), **Outreach**, **Enhanced Listings**, and the **Audit Log**.
 
-## Deploy on Vercel
+## Documentation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [Architecture](docs/ARCHITECTURE.md)
+- [Database and seed data](docs/DATABASE.md)
+- [Search and geographic search](docs/SEARCH.md)
+- [Verification, claims, Source Watch, and other workflows](docs/WORKFLOWS.md)
+- [Roles, RLS, and security](docs/SECURITY.md)
+- [Accessibility](docs/ACCESSIBILITY.md)
+- [Deployment, backups, and ownership handoff](docs/DEPLOYMENT.md)
+- [Engineering conventions](docs/CONVENTIONS.md)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tests
+
+```bash
+npm test             # unit + database tests (search, RLS permissions, seed coverage)
+npm run test:e2e     # Playwright end-to-end demo flow + axe accessibility scans
+```

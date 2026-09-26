@@ -50,3 +50,6 @@ next-env.d.ts
 
 # generated at build time
 /demo-db
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
